@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -11,8 +12,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -48,24 +53,25 @@ public class Todolist extends JFrame {
         // Inicializa campos de entrada, botões e JComboBox
 
         taskInputField = new JTextField();
-        addButton = new JButton("Adicionar");
-        deleteButton = new JButton("Excluir");
-        markDoneButton = new JButton("Concluir");
+        addButton = new JButton("Adicionar Tarefa");
+        deleteButton = new JButton("Excluir Tarefa");
+        markDoneButton = new JButton("Concluir a Tarefa");
         filterComboBox = new JComboBox<>(new String[] { "Todas", "Ativas",
                 "Concluídas" });
         clearCompletedButton = new JButton("Limpar Concluídas");
         // Configuração do painel de entrada
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputPanel.add(taskInputField, BorderLayout.CENTER);
-        inputPanel.add(addButton, BorderLayout.EAST);
-        inputPanel.add(filterComboBox, BorderLayout.WEST);
+        // inputPanel.add(addButton, BorderLayout.EAST);
+        inputPanel.add(filterComboBox, BorderLayout.EAST);
         // Configuração do painel de botões
         JPanel buttonPanel = new JPanel();
-        BoxLayout bl = new BoxLayout(buttonPanel, BoxLayout.Y_AXIS);
-        buttonPanel.setLayout(bl);
+        GridLayout gr = new GridLayout(5, 1);
+        buttonPanel.setLayout(gr);
+        buttonPanel.add(addButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(markDoneButton);
-        //buttonPanel.add(filterComboBox);
+        // buttonPanel.add(filterComboBox);
         buttonPanel.add(clearCompletedButton);
         // Adiciona os componentes ao painel principal
         mainPanel.add(inputPanel, BorderLayout.NORTH);
@@ -73,8 +79,13 @@ public class Todolist extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.WEST);
         // Adiciona o painel principal à janela
         this.add(mainPanel);
-        // Configuração de Listener para os Eventos
 
+        // Estilização
+        taskInputField.setBackground(new Color(63, 62, 64));
+        taskInputField.setForeground(Color.WHITE);
+
+
+        // Configuração de Listener para os Eventos
         addButton.addActionListener(e -> { // ao clicar no botão adicionar
 
             if (taskInputField.getText() != "") { // Verifica se o campo está vazio
