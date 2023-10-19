@@ -72,7 +72,7 @@ public class Todolist extends JFrame {
         inputPanel.add(filterComboBox, BorderLayout.EAST);
         // Configuração do painel de botões
         JPanel buttonPanel = new JPanel();
-        GridLayout gr = new GridLayout(5, 1, 0, 5);
+        GridLayout gr = new GridLayout(4, 1, 0, 8);
         buttonPanel.setLayout(gr);
         buttonPanel.add(addButton);
         buttonPanel.add(deleteButton);
