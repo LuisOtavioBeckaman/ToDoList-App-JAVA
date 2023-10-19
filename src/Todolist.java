@@ -338,7 +338,7 @@ public class Todolist extends JFrame {
         if (selectedIndex >= 0 && selectedIndex < tasks.size()) {
 
             int resposta = JOptionPane.showConfirmDialog(null, "Você concluiu essa tarefa?", getTitle(),
-                    JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE); // Pergunta ao usuário se ele concluiu a
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); // Pergunta ao usuário se ele concluiu a
                                                                            // tarefa
 
             if (resposta == JOptionPane.YES_OPTION) { // Caso escolha 'YES' , a tarefa é marcada como concluída
@@ -375,7 +375,7 @@ public class Todolist extends JFrame {
         // Limpa todas as tasks concluídas da lista
         int resposta = JOptionPane.showConfirmDialog(null, "Você deseja excluir todas as tarefas concluídas?",
                 getTitle(),
-                JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE); // Pergunta ao usuário se ele quer excluir todas
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE); // Pergunta ao usuário se ele quer excluir todas
                                                                        // as tarefas concluídas
 
         if (resposta == JOptionPane.YES_OPTION) { // Caso escolha 'YES', todas as tarefas concluídas são apagadas
@@ -408,7 +408,7 @@ public class Todolist extends JFrame {
 
     public void close() {
         int resposta = JOptionPane.showConfirmDialog(null, "Você deseja sair do app?", getTitle(),
-                JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE); // Pergunta ao usuário se deseja fechar o app
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE); // Pergunta ao usuário se deseja fechar o app
         if (resposta == JOptionPane.YES_OPTION) { // Caso escolha 'YES' , o app é fechado.
             this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         } else {
