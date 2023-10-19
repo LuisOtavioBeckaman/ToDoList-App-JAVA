@@ -22,8 +22,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class Todolist extends JFrame {
     // atributos
@@ -40,7 +44,7 @@ public class Todolist extends JFrame {
 
     public Todolist() {
         super("TO-DO List App");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(700, 700);
         // Inicializa o painel principal
         mainPanel = new JPanel();
@@ -52,7 +56,7 @@ public class Todolist extends JFrame {
 
         // Inicializa campos de entrada, botões e JComboBox
 
-        taskInputField = new JTextField();
+        taskInputField = new JTextField("Digite sua tarefa...");
         addButton = new JButton("Adicionar Tarefa");
         deleteButton = new JButton("Excluir Tarefa");
         markDoneButton = new JButton("Concluir a Tarefa");
@@ -79,60 +83,106 @@ public class Todolist extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.WEST);
         // Adiciona o painel principal à janela
         this.add(mainPanel);
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-        // Estilização
+        // Estilização :
         taskInputField.setBackground(new Color(63, 62, 64));
+        taskInputField.setBorder(BorderFactory.createLineBorder(new Color(93, 92, 94, 10), 5));
         taskInputField.setForeground(Color.WHITE);
 
+        taskList.setBackground(new Color(93, 92, 94));
+        taskInputField.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 10), 5));
+        taskList.setForeground(Color.WHITE);
+
+        buttonPanel.setBackground(new Color(27, 27, 28));
+        buttonPanel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 10), 5));
+
+        addButton.setBackground(new Color(121, 42, 42));
+        addButton.setForeground(Color.WHITE);
+        addButton.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 10), 5));
+
+        deleteButton.setBackground(new Color(202, 255, 132));
+        deleteButton.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 10), 5));
+
+        markDoneButton.setBackground(new Color(255,204,93));
+        markDoneButton.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 10), 5));
+
+        clearCompletedButton.setBackground(new Color(200,243,253));
+        clearCompletedButton.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 10), 5));
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
         // Configuração de Listener para os Eventos
-        addButton.addActionListener(e -> { // ao clicar no botão adicionar
 
-            if (taskInputField.getText() != "") { // Verifica se o campo está vazio
-                addTask(); // Executa o método addTask().
-            }
-
+        // ActionListeners :
+        addButton.addActionListener(e -> { // Adicionando o ouvinte ao addButton
+            addTask(); // Ao clicar no botão 'Adicionar' executa o método addTask().
         });
 
-        deleteButton.addActionListener(e -> { // ao clicar no botão excluir
-            deleteTask();
+        deleteButton.addActionListener(e -> { // Adicionando o ouvinte ao deleteButton
+            deleteTask(); // Ao clicar no botão 'Excluir' executa o método deleteTask().
         });
 
-        markDoneButton.addActionListener(e -> { // ao clicar no botão concluida
-
-            markTaskDone();
-
+        markDoneButton.addActionListener(e -> { // Adicionando o ouvinte ao markDoneButton
+            markTaskDone();// Ao clicar no botão 'Concluir a tarefa' executa o método markTaskDone().
         });
 
-        filterComboBox.addActionListener(e -> { // ao clicar no comboBox
-
-            filterTasks();
-
+        filterComboBox.addActionListener(e -> { // Adicionando o ouvinte ao filterComboBox
+            filterTasks();// Ao clicar no comboBox executa o método filterTask(), que filtra as tarefas
+                          // que devem aparecer
         });
 
-        clearCompletedButton.addActionListener(e -> { // ao clicar no botão limpar Tarefas concluídas
-
-            int resposta = JOptionPane.showConfirmDialog(null, "Você deseja excluir todas as tarefas concluídas?",
-                    getTitle(),
-                    JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
-            if (resposta == JOptionPane.YES_OPTION) {
-                clearCompletedTasks();
-            }
-
+        clearCompletedButton.addActionListener(e -> { // Adicionando o ouvinte ao clearCompletedButton
+            clearCompletedTasks(); // Ao clicar no botão 'Limpar tarefas concluídas', executar o método clearCompletedTasks().
         });
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+        // KeyListeners :
         HandlerEnterText enterText = new HandlerEnterText(); // Handler para adicionar uma task
-        taskInputField.addKeyListener(enterText); // Ao digitar no campo e pressionar ENTER adiciona uma tarefa a lista
+        taskInputField.addKeyListener(enterText); // Adicionando o ouvinte a taskInputField
 
-        HandlerDeleteText deleteText = new HandlerDeleteText(); // Handler para deletar uma task
-        taskList.addKeyListener(deleteText);//
+        HandlerDeleteText deleteText = new HandlerDeleteText(); // Handler para remover uma task
+        taskList.addKeyListener(deleteText); // Adicionando o ouvinte a taskList
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        
+        // MouseListeners :
+        HandlerDblClick doneDblClick = new HandlerDblClick(); // Handler para marcar task como concluída com 2 clicks
+        taskList.addMouseListener(doneDblClick); // Adiciona o ouvinte a taskList
 
-        HandlerDblClick doneDblClick = new HandlerDblClick(); // Handler para marcar uma task como concluída com 2
-                                                              // clicks
-        taskList.addMouseListener(doneDblClick);
+        taskInputField.addMouseListener(new MouseAdapter() { // Adiciona o ouvinte a taskInputField
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                taskInputField.setText(""); // Ao clicar no campo para digitar uma tarefa o texto é limpado
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                taskInputField.setText(""); // Ao passar o mouse sobre o campo para digitar uma tarefa o texto é limpado
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                taskInputField.setText("Digite sua tarefa..."); // Ao retirar o mouse do campo para digitar uma tarefa o
+                                                                // texto é definido como "Digite uma tarefa..."
+            }
+        });
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        
+        // WindowListener :
+        this.addWindowListener(new WindowAdapter() { // Adiciona o ouvinte ao JFrame
+            @Override
+            public void windowClosing(WindowEvent e) {
+                close(); // Ao clicar no "X" do JFrame, é perguntado ao usuário se ele realmente deseja
+                         // fechar o programa
+            }
+
+        });
     }
 
-    public class HandlerEnterText implements KeyListener {
+    // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    // Handlers para os eventos
+
+    public class HandlerEnterText implements KeyListener { // Handler para o KeyListener do taskInputField : Ao apertar
+                                                           // a tecla 'enter' você adiciona uma tarefa
 
         @Override
         public void keyPressed(KeyEvent e) {
@@ -156,12 +206,14 @@ public class Todolist extends JFrame {
 
     }
 
-    public class HandlerDeleteText implements KeyListener {
+    public class HandlerDeleteText implements KeyListener { // Handler para o KeyListener do taskList : Ao clicar em uma
+                                                            // tarefa da lista e pressionar a tecla 'DELETE' você exclui
+                                                            // a tarefa selecionada
 
         @Override
         public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-                deleteTask();
+            if (e.getKeyCode() == KeyEvent.VK_DELETE) { // Verifica se a tecla pressionada é a 'DELETE'
+                deleteTask(); // Se for , executa o método deleteTask(), apaga a tarefa.
             }
 
         }
@@ -180,14 +232,18 @@ public class Todolist extends JFrame {
 
     }
 
-    public class HandlerDblClick implements MouseListener {
+    public class HandlerDblClick implements MouseListener { // Handler para MouseListener da taskList : Ao dar 2 clicks
+                                                            // em uma tarefa da lista , você marca essa tarefa como
+                                                            // concluída
 
         @Override
         public void mouseClicked(MouseEvent e) {
             // TODO Auto-generated method stub
-            if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) { // Ao dar 2 clicks em uma task você
-                                                                                 // torna ela em um task concluída
-                markTaskDone();
+            if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) { // Conta quantos clicks foram dados e
+                                                                                 // se foram com o botão esquerdo do
+                                                                                 // mouse.
+                markTaskDone(); // Caso tenha dado 2 click seguidos com o botão esquerdo do mouse , executa o
+                                // método markTaskDone(), marca a tarefa como concluída
             }
 
         }
@@ -218,15 +274,19 @@ public class Todolist extends JFrame {
 
     }
 
+    // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+    // Métodos :
     private void addTask() {
         // Adiciona uma nova task à lista de tasks
         String taskDescription = taskInputField.getText().trim();// remove espaços vazios
-        if (!taskDescription.isEmpty()) {
+        if (!taskDescription.isEmpty()) { // Verifica se o campo não está vazio , caso não esteja adiciona uma task a lista
             Task newTask = new Task(taskDescription);
             tasks.add(newTask);
-            JOptionPane.showMessageDialog(null, "Tarefa adicionada", getTitle(), JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Tarefa adicionada", getTitle(), JOptionPane.INFORMATION_MESSAGE); // Notifica o usuário que uma task foi adicionada
             updateTaskList();
-            taskInputField.setText("");
+            taskInputField.setText(""); // Após adicionar uma task limpa o campo digitado
         }
     }
 
@@ -236,11 +296,11 @@ public class Todolist extends JFrame {
         if (selectedIndex >= 0 && selectedIndex < tasks.size()) {
 
             int resposta = JOptionPane.showConfirmDialog(null, "Você deseja excluir essa tarefa?", getTitle(),
-                    JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE); // Pergunta ao usuário se ele realmente deseja excluir a task 
 
-            if (resposta == JOptionPane.YES_OPTION) {
+            if (resposta == JOptionPane.YES_OPTION) {// Caso escolha a opção 'YES', a tarefa é excluída
                 tasks.remove(selectedIndex);
-                JOptionPane.showMessageDialog(null, "Tarefa excluída", getTitle(), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Tarefa excluída", getTitle(), JOptionPane.INFORMATION_MESSAGE); // Notifica o usuário de que a tarefa foi excluída
                 updateTaskList();
             }
 
@@ -249,14 +309,23 @@ public class Todolist extends JFrame {
 
     private void markTaskDone() {
         // Marca a task selecionada como concluída
+        
         int selectedIndex = taskList.getSelectedIndex();
         if (selectedIndex >= 0 && selectedIndex < tasks.size()) {
-            Task task = tasks.get(selectedIndex);
-            JOptionPane.showMessageDialog(null, "Tarefa concluída", getTitle(), JOptionPane.INFORMATION_MESSAGE);
-            task.setDone(true);
-            updateTaskList();
+
+            int resposta = JOptionPane.showConfirmDialog(null, "Você concluiu essa tarefa?", getTitle(),
+                    JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE); // Pergunta ao usuário se ele concluiu a tarefa
+            
+            if (resposta == JOptionPane.YES_OPTION){ // Caso escolha 'YES' , a tarefa é marcada como concluída
+                Task task = tasks.get(selectedIndex);
+
+                JOptionPane.showMessageDialog(null, "Tarefa concluída", getTitle(), JOptionPane.INFORMATION_MESSAGE); // Notifica o usuário de que a tarefa foi concluída
+                task.setDone(true);
+                updateTaskList();
+            }
         }
     }
+    
 
     private void filterTasks() {
         // Filtra as tasks com base na seleção do JComboBox
@@ -272,14 +341,20 @@ public class Todolist extends JFrame {
 
     private void clearCompletedTasks() {
         // Limpa todas as tasks concluídas da lista
-        List<Task> completedTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.isDone()) {
-                completedTasks.add(task);
+        int resposta = JOptionPane.showConfirmDialog(null, "Você deseja excluir todas as tarefas concluídas?",
+                getTitle(),
+                JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE); // Pergunta ao usuário se ele quer excluir todas as tarefas concluídas
+
+        if (resposta == JOptionPane.YES_OPTION) { // Caso escolha 'YES', todas as tarefas concluídas são apagadas
+            List<Task> completedTasks = new ArrayList<>();
+            for (Task task : tasks) {
+                if (task.isDone()) {
+                    completedTasks.add(task);
+                }
             }
+            tasks.removeAll(completedTasks);
+            updateTaskList();
         }
-        tasks.removeAll(completedTasks);
-        updateTaskList();
     }
 
     private void updateTaskList() {
@@ -296,5 +371,13 @@ public class Todolist extends JFrame {
     public void run() {
         // Exibe a janela
         this.setVisible(true);
+    }
+
+    public void close() {
+        int resposta = JOptionPane.showConfirmDialog(null, "Você deseja sair do app?", getTitle(),
+                JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE); // Pergunta ao usuário se deseja fechar o app 
+        if (resposta == JOptionPane.YES_OPTION) { // Caso escolha 'YES' , o app é fechado.
+            this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        }
     }
 }
